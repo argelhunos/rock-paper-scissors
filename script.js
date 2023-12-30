@@ -1,62 +1,109 @@
+// score variables:
+let computerScoreCount = 0;
+let userScoreCount = 0;
+let round = 0;
+
+const rockButton = document.querySelector('#rock');
+const paperButton = document.querySelector('#paper');
+const scissorsButton = document.querySelector('#scissors');
+const gameResults = document.querySelector('.game-status .results');
+const computerScore = document.querySelector('.game-status .computer-score');
+const userScore = document.querySelector('.game-status .user-score')
+const score = document.querySelector('.game-status');
+
+rockButton.addEventListener('click', function() {
+    playRound('rock', getComputerChoice());
+});
+
+paperButton.addEventListener('click', function() {
+    playRound('paper', getComputerChoice());
+});
+
+scissorsButton.addEventListener('click', function() {
+    playRound('scissors', getComputerChoice());
+});
+
 function getComputerChoice() {
     let choices = ['rock', 'paper', 'scissors'];
     return choices[Math.floor(Math.random() * 3)];
 }
 
 function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
-
+    round++;
     if (playerSelection === computerSelection) {
-        return "A tie!"
+        gameResults.textContent = "A tie!"
     } else {
         switch (computerSelection) {
             case 'rock':
                 if (playerSelection === 'paper') {
-                    return "You win! Paper beats Rock";
+                    gameResults.textContent = "You win! Paper beats Rock";
+                    userScoreCount++;
                 } else {
-                    return "You lose! Rock beats Scissors";
+                    gameResults.textContent = "You lose! Rock beats Scissors";
+                    computerScoreCount++;
                 }
+                break;
             case 'paper':
                 if (playerSelection === 'scissors') {
-                    return "You win! Scissors beats Paper";
+                    gameResults.textContent = "You win! Scissors beats Paper";
+                    userScoreCount++;
                 } else {
-                    return "You lose! Paper beats Rock";
+                    gameResults.textContent = "You lose! Paper beats Rock";
+                    computerScoreCount++;
                 }
+                break;
             case 'scissors':
                 if (playerSelection === 'rock') {
-                    return "You win! Rock beats Scissors";
+                    gameResults.textContent = "You win! Rock beats Scissors";
+                    userScoreCount++;
                 } else {
-                    return "You lose! Scissors beats paper";
+                    gameResults.textContent = "You lose! Scissors beats paper";
+                    computerScoreCount++;
                 }
+                break;
             default:
-                return "what?";
+                gameResults.textContent = "what?";
         }
+    }
+
+    computerScore.textContent = "Computer Score: " + computerScoreCount;
+    userScore.textContent = "User Score: " + userScoreCount;
+    if (round == 5) {
+        round = 1;
+
+        if (computerScoreCount > userScoreCount) {
+            gameResults.textContent += " You lose the game! Choose again to play again!";
+        } else if (computerScoreCount < userScoreCount) {
+            gameResults.textContent += " You win the game! Choose again to play again!";
+        } else {
+            gameResults.textContent += " The game ends in a tie! Choose again to play again!"
+        }
+
+        computerScoreCount = 0;
+        userScoreCount = 0;
     }
 }
 
 function game() {
-    let userScore = 0;
-    let computerScore = 0;
+    let userScoreCount = 0;
+    let computerScoreCount = 0;
 
     for (let index = 0; index < 5; index++) {
         let results = playRound(prompt("Rock, paper, or scissors?"), getComputerChoice())
         if (results.includes("win")) {
-            userScore++;
+            userScoreCount++;
         } else if (results.includes("lose")) {
-            computerScore++;
+            computerScoreCount++;
         }
         console.log(results);
     }
 
     // print out results of game
-    if (userScore === computerScore) {
+    if (userScoreCount === computerScoreCount) {
         console.log("It's a tie!");
-    } else if (userScore < computerScore) {
+    } else if (userScoreCount < computerScoreCount) {
         console.log("Computer wins!");
-    } else if (userScore > computerScore) {
+    } else if (userScoreCount > computerScoreCount) {
         console.log("You win!")
     }
 }
-
-game()
